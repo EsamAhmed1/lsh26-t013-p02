@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MediShelf &mdash; Pharmacy Inventory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%2328A9C9'/><path d='M14 8h4v6h6v4h-6v6h-4v-6H8v-4h6z' fill='white'/></svg>">
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<div class="app">
+
+  <!-- ============================ SIDEBAR ============================ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="15" rx="4" fill="white" opacity=".95"/><path d="M9 6V4.5A1.5 1.5 0 0 1 10.5 3h3A1.5 1.5 0 0 1 15 4.5V6" stroke="white" stroke-width="2" stroke-linecap="round"/><path d="M12 10.5v6M9 13.5h6" stroke="#28A9C9" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="brand-text">
+        <h1>Medi<span>Shelf</span></h1>
+        <p>Pharmacy Inventory</p>
+        <span class="role-badge role-pharmacy">Pharmacy Panel</span>
+      </div>
+    </div>
+
+    <nav class="nav" id="nav">
+      <button class="nav-item is-active" data-view="dashboard">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>
+        <span>Dashboard</span>
+      </button>
+      <button class="nav-item" data-view="stock">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18"/></svg>
+        <span>Stock</span>
+      </button>
+      <button class="nav-item" data-view="alerts">
+        <svg viewBox="0 0 24 24"><path d="M12 4 3 20h18L12 4Z"/><path d="M12 10v4M12 17h.01"/></svg>
+        <span>Expiry Alerts</span>
+        <em class="nav-badge" id="navAlertBadge">0</em>
+      </button>
+      <button class="nav-item" data-view="orders">
+        <svg viewBox="0 0 24 24"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M6 6 5 3H2"/></svg>
+        <span>Order Medicines</span>
+        <em class="nav-badge" id="navOrderBadge" style="background:#2FA98A">0</em>
+      </button>
+      <button class="nav-item" data-view="returned">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M14 12H8m0 0 3-3m-3 3 3 3"/></svg>
+        <span>Returned</span>
+      </button>
+      <button class="nav-item" data-view="reports">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M8 16v-4M12 16V9M16 16v-2"/></svg>
+        <span>Reports</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="user-chip">
+        <div class="avatar" id="userInitials">--</div>
+        <div>
+          <b id="userOrg">&mdash;</b>
+          <small id="userName">&mdash;</small>
+        </div>
+      </div>
+      <button class="btn-logout" id="logoutBtn">Sign out</button>
+      <label class="case-picker">
+        <span>Judge Test Case</span>
+        <select id="caseSelect" aria-label="Select test case"></select>
+      </label>
+      <p class="ref-note">Reference date: <b id="sidebarRefDate">&mdash;</b></p>
+      <button class="btn-primary btn-block" id="resetBtn">
+        <svg viewBox="0 0 24 24" class="ico"><path d="M4 12a8 8 0 1 1 2.3 5.6"/><path d="M4 20v-5h5"/></svg>
+        Reset Demo Data
+      </button>
+    </div>
+  </aside>
+
+  <!-- ============================= MAIN ============================= -->
+  <main class="main">
+
+    <header class="topbar">
+      <div class="greeting">
+        <h2 id="greetingText">Good morning, Rafiq</h2>
+        <p id="topbarSub">Loading inventory&hellip;</p>
+      </div>
+      <div class="topbar-right">
+        <div class="search">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="search" id="searchInput" placeholder="Search medicine, batch, company&hellip;" aria-label="Search inventory">
+        </div>
+        <button class="icon-btn" title="Notifications" id="bellBtn">
+          <svg viewBox="0 0 24 24"><path d="M18 16V11a6 6 0 1 0-12 0v5l-2 3h16l-2-3Z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg>
+          <em class="dot" id="bellDot"></em>
+        </button>
+        <div class="avatar" title="Rafiq Hasan &mdash; Dhanmondi Branch">RH</div>
+      </div>
+    </header>
+
+    <div class="scroll" id="scrollArea">
+
+      <!-- ========================= DASHBOARD ========================= -->
+      <section class="view is-active" data-view="dashboard">
+
+        <div class="hero glass">
+          <div class="hero-copy">
+            <h3>Catch It Before<br>It Expires</h3>
+            <p id="heroLine">&mdash;</p>
+            <button class="btn-primary" id="heroBtn">
+              Review Expiring Stock
+              <svg viewBox="0 0 24 24" class="ico"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+            </button>
+          </div>
+          <div class="hero-art" aria-hidden="true">
+            <svg viewBox="0 0 220 180">
+              <defs>
+                <linearGradient id="bottle" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#ffffff" stop-opacity=".95"/>
+                  <stop offset="1" stop-color="#8ed8ec" stop-opacity=".7"/>
+                </linearGradient>
+                <linearGradient id="cap" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#5ec7e0"/><stop offset="1" stop-color="#1e8fb0"/>
+                </linearGradient>
+              </defs>
+              <ellipse cx="110" cy="150" rx="62" ry="12" fill="#28A9C9" opacity=".14"/>
+              <rect x="86" y="26" width="48" height="18" rx="6" fill="url(#cap)"/>
+              <rect x="74" y="44" width="72" height="94" rx="20" fill="url(#bottle)" stroke="#ffffff" stroke-width="2"/>
+              <path d="M110 66c10 4 18 6 22 6 0 18-9 30-22 36-13-6-22-18-22-36 4 0 12-2 22-6Z" fill="#28A9C9" opacity=".22"/>
+              <path d="M110 82v18M101 91h18" stroke="#1e8fb0" stroke-width="4.5" stroke-linecap="round"/>
+              <g opacity=".9">
+                <rect x="30" y="52" width="26" height="13" rx="6.5" fill="#ffd98a" transform="rotate(-24 43 58)"/>
+                <rect x="162" y="86" width="26" height="13" rx="6.5" fill="#9fe8dc" transform="rotate(18 175 92)"/>
+                <rect x="44" y="112" width="24" height="12" rx="6" fill="#bfe6f5" transform="rotate(12 56 118)"/>
+              </g>
+              <g fill="#ffffff">
+                <circle cx="60" cy="34" r="2.6"/><circle cx="176" cy="52" r="2"/><circle cx="164" cy="132" r="2.4"/><circle cx="46" cy="86" r="1.8"/>
+              </g>
+            </svg>
+          </div>
+        </div>
+
+        <div class="dash-grid">
+          <div class="loss-col">
+            <!-- Requirement 4 - headline figure 1 -->
+            <article class="loss-card loss-expired glass">
+              <div class="loss-head">
+                <span class="tag tag-expired">Already Lost &mdash; Expired</span>
+                <span class="loss-ico ico-expired">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m6 18 12-12"/></svg>
+                </span>
+              </div>
+              <p class="loss-value" id="expiredValue">&#2547; 0</p>
+              <p class="loss-sub" id="expiredSub">0 items &middot; purchase value</p>
+            </article>
+
+            <!-- Requirement 4 - headline figure 2 (0-30 days ONLY) -->
+            <article class="loss-card loss-soon glass">
+              <div class="loss-head">
+                <span class="tag tag-soon">At Risk &mdash; Next 30 Days</span>
+                <span class="loss-ico ico-soon">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                </span>
+              </div>
+              <p class="loss-value" id="soonValue">&#2547; 0</p>
+              <p class="loss-sub" id="soonSub">0 items &middot; still returnable</p>
+            </article>
+          </div>
+
+          <article class="health glass">
+            <h4>Inventory Health</h4>
+            <div class="health-grid" id="healthGrid">
+              <button class="health-cell" data-group="expired">
+                <b id="cntExpired">0</b><span class="tag tag-expired">Expired</span>
+              </button>
+              <button class="health-cell" data-group="soon30">
+                <b id="cntSoon">0</b><span class="tag tag-soon">Within 30</span>
+              </button>
+              <button class="health-cell" data-group="within90">
+                <b id="cnt90">0</b><span class="tag tag-w90">Within 90</span>
+              </button>
+              <button class="health-cell" data-group="safe">
+                <b id="cntSafe">0</b><span class="tag tag-safe">Safe</span>
+              </button>
+            </div>
+            <div class="prop-bar" id="propBar" role="img" aria-label="Proportion of stock in each group">
+              <i class="seg-expired" style="width:0"></i>
+              <i class="seg-soon"    style="width:0"></i>
+              <i class="seg-w90"     style="width:0"></i>
+              <i class="seg-safe"    style="width:0"></i>
+            </div>
+            <p class="health-foot">
+              <span id="sumCheck">0 + 0 + 0 + 0 = 0 active items</span>
+            </p>
+          </article>
+        </div>
+
+        <section class="panel glass">
+          <div class="panel-head">
+            <h4>Stock Inventory</h4>
+            <div class="chips" id="chips">
+              <button class="chip is-active" data-group="all">All</button>
+              <button class="chip" data-group="expired">Expired</button>
+              <button class="chip" data-group="soon30">Within 30</button>
+              <button class="chip" data-group="within90">Within 90</button>
+              <button class="chip" data-group="safe">Safe</button>
+              <span class="chip-divider"></span>
+              <button class="chip chip-muted" data-nav="returned">Returned</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table" id="stockTable">
+              <thead>
+                <tr>
+                  <th>Medicine</th>
+                  <th>Batch</th>
+                  <th class="num">Qty</th>
+                  <th class="num">Unit &#2547;</th>
+                  <th class="num">Value at Risk</th>
+                  <th>Expiry</th>
+                  <th class="sortable" id="sortDays">Days Left <span class="sort-arrow">&#8593;</span></th>
+                  <th class="right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="stockBody"></tbody>
+            </table>
+          </div>
+          <p class="table-foot" id="stockFoot">&mdash;</p>
+        </section>
+      </section>
+
+      <!-- =========================== STOCK =========================== -->
+      <section class="view" data-view="stock">
+        <div class="page-head">
+          <h3>Stock</h3>
+          <p>Every active item on the shelf, soonest expiry first.</p>
+        </div>
+        <section class="panel glass">
+          <div class="panel-head">
+            <h4>All Active Stock</h4>
+            <div class="chips" id="chips2">
+              <button class="chip is-active" data-group="all">All</button>
+              <button class="chip" data-group="expired">Expired</button>
+              <button class="chip" data-group="soon30">Within 30</button>
+              <button class="chip" data-group="within90">Within 90</button>
+              <button class="chip" data-group="safe">Safe</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table" id="stockTable2">
+              <thead>
+                <tr>
+                  <th>Medicine</th><th>Batch</th><th class="num">Qty</th>
+                  <th class="num">Unit &#2547;</th><th class="num">Value at Risk</th>
+                  <th>Expiry</th><th>Days Left</th><th class="right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="stockBody2"></tbody>
+            </table>
+          </div>
+          <p class="table-foot" id="stockFoot2">&mdash;</p>
+        </section>
+      </section>
+
+      <!-- ======================== EXPIRY ALERTS ====================== -->
+      <section class="view" data-view="alerts">
+        <div class="page-head">
+          <h3>Expiry Alerts</h3>
+          <p>Expired stock and everything expiring within 30 days &mdash; the money at stake.</p>
+        </div>
+        <div class="alert-strip">
+          <div class="alert-card glass loss-expired">
+            <span class="tag tag-expired">Already Lost</span>
+            <p class="loss-value sm" id="alertExpiredValue">&#2547; 0</p>
+            <p class="loss-sub" id="alertExpiredSub">0 items</p>
+          </div>
+          <div class="alert-card glass loss-soon">
+            <span class="tag tag-soon">At Risk &mdash; 30 Days</span>
+            <p class="loss-value sm" id="alertSoonValue">&#2547; 0</p>
+            <p class="loss-sub" id="alertSoonSub">0 items</p>
+          </div>
+        </div>
+        <section class="panel glass">
+          <div class="panel-head"><h4>Action Required</h4></div>
+          <div class="table-wrap">
+            <table class="table" id="alertTable">
+              <thead>
+                <tr>
+                  <th>Medicine</th><th>Batch</th><th class="num">Qty</th>
+                  <th class="num">Value at Risk</th><th>Expiry</th>
+                  <th>Days Left</th><th class="right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="alertBody"></tbody>
+            </table>
+          </div>
+          <p class="table-foot" id="alertFoot">&mdash;</p>
+        </section>
+      </section>
+
+
+      <!-- ====================== ORDER MEDICINES ====================== -->
+      <section class="view" data-view="orders">
+        <div class="page-head">
+          <h3>Order Medicines</h3>
+          <p>Order stock from your distributors and track it through to delivery.</p>
+        </div>
+
+        <section class="panel glass">
+          <div class="panel-head"><h4>Place a New Order</h4></div>
+          <div class="order-form">
+            <div class="field" style="margin:0">
+              <label for="ordDistributor">Distributor</label>
+              <select id="ordDistributor"></select>
+            </div>
+            <div class="field" style="margin:0">
+              <label for="ordMedicine">Medicine</label>
+              <select id="ordMedicine"></select>
+            </div>
+            <div class="field" style="margin:0">
+              <label for="ordQty">Quantity</label>
+              <input type="number" id="ordQty" min="1" value="100">
+            </div>
+            <button class="btn-primary" id="ordSubmit">
+              Place Order
+              <svg viewBox="0 0 24 24" class="ico"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+            </button>
+          </div>
+          <p class="table-foot" id="ordHint">&mdash;</p>
+        </section>
+
+        <div class="stat-row" id="ordStats"></div>
+
+        <section class="panel glass">
+          <div class="panel-head">
+            <h4>My Orders</h4>
+            <div class="chips" id="ordChips">
+              <button class="chip is-active" data-status="">All</button>
+              <button class="chip" data-status="pending">Pending</button>
+              <button class="chip" data-status="accepted">Accepted</button>
+              <button class="chip" data-status="out_for_delivery">Out for Delivery</button>
+              <button class="chip" data-status="delivered">Delivered</button>
+              <button class="chip" data-status="rejected">Rejected</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table" id="ordTable">
+              <thead>
+                <tr>
+                  <th>Medicine</th><th>Distributor</th><th class="num">Qty</th>
+                  <th>Ordered</th><th>Status</th><th class="right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="ordBody"></tbody>
+            </table>
+          </div>
+          <p class="table-foot" id="ordFoot">&mdash;</p>
+        </section>
+      </section>
+
+      <!-- ========================== RETURNED ========================= -->
+      <section class="view" data-view="returned">
+        <div class="page-head">
+          <h3>Returned Items</h3>
+          <p>Historical log of removed inventory</p>
+        </div>
+
+        <div class="info-bar glass">
+          <span class="info-ico">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+          </span>
+          <p>Returned items no longer count toward active totals or value. They are retained
+             here for audit and compliance purposes.</p>
+        </div>
+
+        <section class="panel glass returned-panel">
+          <div class="table-wrap">
+            <table class="table table-returned" id="returnedTable">
+              <thead>
+                <tr>
+                  <th>Medication / Batch</th>
+                  <th>Batch Info</th>
+                  <th class="num">Qty</th>
+                  <th class="num">Value Removed</th>
+                  <th class="right">Reason</th>
+                </tr>
+              </thead>
+              <tbody id="returnedBody"></tbody>
+            </table>
+          </div>
+          <p class="table-foot" id="returnedFoot">&mdash;</p>
+        </section>
+      </section>
+
+      <!-- ========================== REPORTS ========================== -->
+      <section class="view" data-view="reports">
+        <div class="page-head">
+          <h3>Reports</h3>
+          <p>Case summary, exactly as the grader computes it.</p>
+        </div>
+        <section class="panel glass">
+          <div class="panel-head"><h4>Case Summary</h4></div>
+          <div class="report-grid" id="reportGrid"></div>
+        </section>
+        <section class="panel glass">
+          <div class="panel-head"><h4>Value by Company &mdash; Active Stock at Risk</h4></div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead><tr><th>Company</th><th class="num">Expired &#2547;</th><th class="num">Within 30 &#2547;</th><th class="num">Items</th></tr></thead>
+              <tbody id="reportBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+    </div><!-- /scroll -->
+  </main>
+</div>
+
+<!-- mobile bottom nav -->
+<nav class="mobilenav" id="mobileNav">
+  <button class="is-active" data-view="dashboard"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg><span>Home</span></button>
+  <button data-view="stock"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18"/></svg><span>Stock</span></button>
+  <button data-view="alerts"><svg viewBox="0 0 24 24"><path d="M12 4 3 20h18L12 4Z"/><path d="M12 10v4M12 17h.01"/></svg><span>Alerts</span></button>
+  <button data-view="orders"><svg viewBox="0 0 24 24"><path d="M6 6h15l-1.5 9h-12z"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/></svg><span>Orders</span></button>
+  <button data-view="returned"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M14 12H8m0 0 3-3m-3 3 3 3"/></svg><span>Returned</span></button>
+  <button data-view="reports"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M8 16v-4M12 16V9M16 16v-2"/></svg><span>Reports</span></button>
+</nav>
+
+<!-- ====================== RETURN CONFIRM MODAL ====================== -->
+<div class="modal-back" id="modalBack" hidden>
+  <div class="modal glass" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-ico">
+      <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="15" rx="4"/><path d="M12 11v5M9.5 13.5h5"/></svg>
+    </div>
+    <h4 id="modalTitle">Return to Distributor</h4>
+    <p class="modal-med" id="modalMed">&mdash;</p>
+    <p class="modal-meta" id="modalMeta">&mdash;</p>
+    <div class="modal-amount">
+      <span>Value leaving the active totals</span>
+      <b id="modalAmount">&#2547; 0</b>
+    </div>
+    <p class="modal-note">This item will be removed from the four active groups and from
+       both value totals. It stays on the returned list for audit.</p>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="modalCancel">Cancel</button>
+      <button class="btn-primary" id="modalConfirm">Confirm Return</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ==================== ADD TO INVENTORY MODAL ===================== -->
+<div class="modal-back" id="invBack" hidden>
+  <div class="modal wide glass" role="dialog" aria-modal="true" aria-labelledby="invTitle">
+    <div class="modal-ico">
+      <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="15" rx="4"/><path d="M12 11v5M9.5 13.5h5"/></svg>
+    </div>
+    <h4 id="invTitle">Add to Inventory</h4>
+    <p class="modal-hint">Delivered stock is never added automatically. Enter the batch and
+       expiry printed on the pack you received.</p>
+
+    <div class="field">
+      <label for="invName">Medicine name</label>
+      <input type="text" id="invName" placeholder="Napa">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="invBatch">Batch number</label>
+        <input type="text" id="invBatch" placeholder="NAPA-2026-05">
+      </div>
+      <div class="field">
+        <label for="invExpiry">Expiry date</label>
+        <input type="date" id="invExpiry">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label for="invQty">Quantity received</label>
+        <input type="number" id="invQty" min="1" value="100">
+      </div>
+      <div class="field">
+        <label for="invUnit">Unit</label>
+        <select id="invUnit">
+          <option>Tablets</option><option>Capsules</option><option>Bottles</option>
+          <option>Strips</option><option>Boxes</option><option>Vials</option>
+          <option>Tubes</option><option>Sachets</option><option>Units</option>
+        </select>
+      </div>
+    </div>
+
+    <p class="login-error" id="invError" hidden></p>
+
+    <div class="modal-actions">
+      <button class="btn-ghost" id="invCancel">Cancel</button>
+      <button class="btn-primary" id="invConfirm">Add to Inventory</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="config.js"></script>
+<script src="mock-cases-data.js"></script>
+<script src="mock-backend.js"></script>
+<script src="auth.js"></script>
+<script src="notifications.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

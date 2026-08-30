@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MediShelf &mdash; Distributor Panel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%232FA98A'/><path d='M14 8h4v6h6v4h-6v6h-4v-6H8v-4h6z' fill='white'/></svg>">
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<div class="app">
+
+  <!-- ============================ SIDEBAR ============================ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark" style="background:linear-gradient(140deg,#5FD3B4,#1D8F72)">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M3 8h11v9H3z" fill="white" opacity=".95"/><path d="M14 11h4l3 3v3h-7z" fill="white" opacity=".8"/><circle cx="7" cy="19" r="2" fill="white"/><circle cx="17" cy="19" r="2" fill="white"/></svg>
+      </div>
+      <div class="brand-text">
+        <h1>Medi<span>Shelf</span></h1>
+        <p>Distribution</p>
+        <span class="role-badge role-distributor">Distributor Panel</span>
+      </div>
+    </div>
+
+    <nav class="nav" id="nav">
+      <button class="nav-item is-active" data-view="requests">
+        <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        <span>Order Requests</span>
+        <em class="nav-badge" id="navPendingBadge">0</em>
+      </button>
+      <button class="nav-item" data-view="deliveries">
+        <svg viewBox="0 0 24 24"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+        <span>Deliveries</span>
+      </button>
+      <button class="nav-item" data-view="catalogue">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18M9 9v11"/></svg>
+        <span>My Medicines</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="user-chip">
+        <div class="avatar" id="userInitials" style="background:linear-gradient(140deg,#8FE3CD,#1D8F72)">--</div>
+        <div>
+          <b id="userOrg">&mdash;</b>
+          <small id="userName">&mdash;</small>
+        </div>
+      </div>
+      <button class="btn-logout" id="logoutBtn">Sign out</button>
+    </div>
+  </aside>
+
+  <!-- ============================= MAIN ============================= -->
+  <main class="main">
+
+    <header class="topbar">
+      <div class="greeting">
+        <h2 id="greetingText">Distributor Panel</h2>
+        <p id="topbarSub">Loading orders&hellip;</p>
+      </div>
+      <div class="topbar-right">
+        <div class="search">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input type="search" id="searchInput" placeholder="Search pharmacy or medicine&hellip;" aria-label="Search orders">
+        </div>
+        <button class="icon-btn" title="Notifications" id="bellBtn">
+          <svg viewBox="0 0 24 24"><path d="M18 16V11a6 6 0 1 0-12 0v5l-2 3h16l-2-3Z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg>
+          <em class="dot" id="bellDot"></em>
+        </button>
+        <div class="avatar" id="topAvatar" style="background:linear-gradient(140deg,#8FE3CD,#1D8F72)">--</div>
+      </div>
+    </header>
+
+    <div class="scroll" id="scrollArea">
+
+      <!-- ======================= ORDER REQUESTS ====================== -->
+      <section class="view is-active" data-view="requests">
+        <div class="page-head">
+          <h3>Order Requests</h3>
+          <p>Incoming orders from pharmacies. Accept or reject each request.</p>
+        </div>
+
+        <div class="stat-row" id="reqStats"></div>
+
+        <section class="panel glass">
+          <div class="panel-head">
+            <h4>All Requests</h4>
+            <div class="chips" id="reqChips">
+              <button class="chip is-active" data-status="">All</button>
+              <button class="chip" data-status="pending">Pending</button>
+              <button class="chip" data-status="accepted">Accepted</button>
+              <button class="chip" data-status="rejected">Rejected</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table" id="reqTable">
+              <thead>
+                <tr>
+                  <th>Pharmacy</th><th>Medicine</th><th class="num">Quantity</th>
+                  <th>Order Date</th><th>Status</th><th class="right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="reqBody"></tbody>
+            </table>
+          </div>
+          <p class="table-foot" id="reqFoot">&mdash;</p>
+        </section>
+      </section>
+
+      <!-- ========================= DELIVERIES ======================== -->
+      <section class="view" data-view="deliveries">
+        <div class="page-head">
+          <h3>Deliveries</h3>
+          <p>Accepted orders. Move each one along: Accepted &rarr; Out for Delivery &rarr; Delivered.</p>
+        </div>
+
+        <div class="info-bar glass">
+          <span class="info-ico">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+          </span>
+          <p>The pharmacy sees each status change immediately. Once you mark an order
+             Delivered, the pharmacy can add the stock to its inventory.</p>
+        </div>
+
+        <section class="panel glass">
+          <div class="panel-head"><h4>In Progress</h4></div>
+          <div class="table-wrap">
+            <table class="table" id="delTable">
+              <thead>
+                <tr>
+                  <th>Pharmacy</th><th>Medicine</th><th class="num">Quantity</th>
+                  <th>Status</th><th class="right">Next Step</th>
+                </tr>
+              </thead>
+              <tbody id="delBody"></tbody>
+            </table>
+          </div>
+          <p class="table-foot" id="delFoot">&mdash;</p>
+        </section>
+      </section>
+
+      <!-- ========================= CATALOGUE ========================= -->
+      <section class="view" data-view="catalogue">
+        <div class="page-head">
+          <h3>My Medicines</h3>
+          <p>The medicines you supply. Pharmacies can only order what is listed here.</p>
+        </div>
+
+        <section class="panel glass">
+          <div class="panel-head"><h4>Add or Restock a Medicine</h4></div>
+          <div class="order-form">
+            <div class="field" style="margin:0">
+              <label for="medName">Medicine name</label>
+              <input type="text" id="medName" placeholder="Napa 500">
+            </div>
+            <div class="field" style="margin:0">
+              <label for="medUnit">Unit</label>
+              <select id="medUnit">
+                <option>Tablets</option><option>Capsules</option><option>Bottles</option>
+                <option>Strips</option><option>Boxes</option><option>Vials</option>
+                <option>Tubes</option><option>Sachets</option>
+              </select>
+            </div>
+            <div class="field" style="margin:0">
+              <label for="medQty">Available qty</label>
+              <input type="number" id="medQty" min="0" value="1000">
+            </div>
+            <button class="btn-primary" id="medSave">Save</button>
+          </div>
+          <div class="field-row" style="margin-top:14px">
+            <div class="field">
+              <label for="medCompany">Company (optional)</label>
+              <input type="text" id="medCompany" placeholder="Beximco">
+            </div>
+            <div class="field">
+              <label for="medPrice">Unit price &#2547;</label>
+              <input type="number" id="medPrice" min="0" step="0.01" value="1.00">
+            </div>
+          </div>
+          <p class="table-foot" id="medHint">Saving a name that already exists updates it instead of adding a duplicate.</p>
+        </section>
+
+        <section class="panel glass">
+          <div class="panel-head"><h4>Catalogue</h4></div>
+          <div class="table-wrap">
+            <table class="table" id="medTable">
+              <thead>
+                <tr>
+                  <th>Medicine</th><th>Company</th><th>Unit</th>
+                  <th class="num">Available</th><th class="num">Unit &#2547;</th>
+                  <th class="right">Status</th>
+                </tr>
+              </thead>
+              <tbody id="medBody"></tbody>
+            </table>
+          </div>
+          <p class="table-foot" id="medFoot">&mdash;</p>
+        </section>
+      </section>
+
+    </div><!-- /scroll -->
+  </main>
+</div>
+
+<nav class="mobilenav" id="mobileNav">
+  <button class="is-active" data-view="requests"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 8h8M8 12h8"/></svg><span>Requests</span></button>
+  <button data-view="deliveries"><svg viewBox="0 0 24 24"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7z"/></svg><span>Delivery</span></button>
+  <button data-view="catalogue"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 9h18"/></svg><span>Medicines</span></button>
+</nav>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="config.js"></script>
+<script src="mock-cases-data.js"></script>
+<script src="mock-backend.js"></script>
+<script src="auth.js"></script>
+<script src="notifications.js"></script>
+<script src="distributor.js"></script>
+</body>
+</html>
