@@ -1,69 +1,107 @@
-# MediShelf (static, frontend-only)
+# MediShelf
 
-MediShelf is a pharmacy inventory & ordering demo. This build is **100%
-front-end** — there is no Django, no Python, no database, and no server to
-run. Every page is a plain static file, and all "backend" logic (auth,
-expiry grouping, orders, notifications) runs in the browser, backed by an
-in-memory/localStorage mock database seeded from demo data.
+Solution for **LofiStack Hackathon 2026 — P02 (Pharmacy Expiry Shelf Check)**
 
-## Run it locally
+## Project information
 
-No build step, no install. Just serve the folder:
+- **Team:** `Byte Bandits`
+- **Team ID:** `LSH26-T013`
+- **Problem:** `P02 — Pharmacy Expiry Shelf Check`
+- **Live application:** <https://medishelf-final.vercel.app/>
+- **Demo video:** [FILL IN: optional link, maximum three minutes, or delete this line]
 
-```bash
-npx serve .
-# or
-python3 -m http.server 8000
-```
+> Judges will evaluate only the exact commit SHA entered in the Final Submission Form.
 
-Then open `login.html` (or `/`, which redirects to it).
+## Solution summary
 
-## Demo accounts
+[FILL IN: 2–4 sentences describing what MediShelf does and who it helps — e.g. how it lets a pharmacy load or enter shelf stock and flags value at risk from expiring/expired items.]
 
-| Role        | Username      | Password   |
-|-------------|---------------|------------|
-| Pharmacy    | `pharmacy`    | `pharma123`|
-| Pharmacy    | `pharmacy2`   | `pharma123`|
-| Distributor | `distributor` | `dist123`  |
-| Distributor | `distributor2`| `dist123`  |
+## Requirements
 
-Sign in as a Pharmacy in one tab and a Distributor in another tab (same
-browser) to see both sides of the ordering workflow update live — orders
-placed by the pharmacy show up for the distributor, status changes made by
-the distributor show up back in the pharmacy panel, and delivered orders can
-be added to pharmacy inventory with a batch/expiry/quantity/unit you supply.
+Fill in the actual status ("Complete", "Partial", or "Not attempted") and where in the app judges can verify each item. The rows below are drafted from the P02 problem statement and the published clarifications (R-04, R-24, R-27) — adjust wording/status to match what was actually built.
 
-## How the "backend" works now
+| Requirement                                                                                 | Status                             | Where to verify       |
+| --------------------------------------------------------------------------------------------- | ----------------------------------- | ---------------------- |
+| R1 — Load/enter shelf items (id, name, company, batch, quantity, unit price, expiry)          | [FILL IN: Complete / Partial / Not attempted] | [FILL IN: page, route or action] |
+| R2 — Compute value at risk = quantity × unit price per item                                    | [FILL IN: Complete / Partial / Not attempted] | [FILL IN: page, route or action] |
+| R3 — Group items into Expired vs. Expiring Soon (0–30 days left, inclusive) vs. Safe            | [FILL IN: Complete / Partial / Not attempted] | [FILL IN: page, route or action] |
+| R4 — Remove returned items (via `mark_returned`) from active counts and active value totals   | [FILL IN: Complete / Partial / Not attempted] | [FILL IN: page, route or action] |
 
-- **`mock-cases-data.js`** — the original judge dataset
-  (`P02_pharmacy_expiry_public.json`), embedded as a JS object.
-- **`mock-backend.js`** — a small in-browser API that mirrors the old
-  Django endpoints 1:1 (same paths, same request/response shapes, same
-  expiry-grouping rules, same order state machine). It stores its data in
-  `localStorage` under `medishelf_mock_db_v1`, so data persists across
-  page reloads and is shared across every tab on the same origin (which is
-  what makes "log in as Pharmacy and Distributor at the same time" work).
-- **`auth.js`** — unchanged in spirit, but now calls `window.MediMock` instead
-  of `fetch()`-ing a real server. `app.js`, `distributor.js` and
-  `notifications.js` were not touched — they still just call
-  `MediAuth.api(path, options)`.
+## How to test the application
 
-To wipe all demo data and start over, clear the site's local storage (or
-open the console and run `MediMock.resetAllData()`), then refresh.
+1. Open the live application at <https://medishelf-final.vercel.app/>.
+2. [FILL IN: First action, e.g. "Upload a fixture JSON file or enter items manually."]
+3. [FILL IN: Second action, e.g. "Mark an item as returned using the case's mark_returned list."]
+4. [FILL IN: Expected result, e.g. "Confirm the expired/expiring-soon groups and value-at-risk totals update correctly."]
 
-## Deploying to Vercel
+### Test or sample data
 
-This repo needs **zero configuration**. Push it to GitHub and import it into
-Vercel as a static project (Framework Preset: "Other"). `vercel.json` just
-redirects `/` to `/login.html`; everything else is served as-is.
+[FILL IN: Explain how judges can load the published `P02_pharmacy_expiry_public.json` fixture into MediShelf, how to enter sample data by hand, and how to reset the app back to its initial state.]
+
+## Run locally
+
+### Requirements
+
+- [FILL IN: Runtime and version, e.g. Node.js 20.x]
+- [FILL IN: Database, if required, or "None"]
+- [FILL IN: Other requirement]
+
+### Setup
 
 ```bash
-git init
-git add .
-git commit -m "MediShelf static build"
-git remote add origin <your-repo-url>
-git push -u origin main
+git clone <PUBLIC-REPOSITORY-URL>
+cd lsh26-t013-p02
+[FILL IN: install command]
+[FILL IN: copy example env command]
+[FILL IN: run command]
 ```
 
-Then "Import Project" in Vercel and deploy — no environment variables, no
-database, no build command required.
+Do not include real passwords, tokens or API keys. List only variable names in `.env.example`.
+
+## Problem-solving approach
+
+Briefly explain:
+
+- [FILL IN: how the team understood the P02 problem]
+- [FILL IN: the chosen solution]
+- [FILL IN: the most important technical or product decision]
+- [FILL IN: how the solution was tested]
+
+## Technology used
+
+- **Frontend:** [FILL IN]
+- **Backend:** [FILL IN]
+- **Database:** [FILL IN]
+- **Deployment:** Vercel
+- **Other material tools:** [FILL IN]
+
+See [`LICENSES.md`](LICENSES.md) for third-party materials.
+
+## Team contributions
+
+| Registered member       | GitHub username        | Major contribution   | Evidence                |
+| ------------------------ | ----------------------- | --------------------- | ------------------------ |
+| Esam Ahmed (Team Leader) | `EsamAhmed1`            | [FILL IN: contribution] | [FILL IN: file, feature or commit] |
+| S.R.M Tanzil Ahmed       | `SRM-Tanzil-Ahmed`      | [FILL IN: contribution] | [FILL IN: file, feature or commit] |
+| Shaishab Saha            | `ShaishabSaha`          | [FILL IN: contribution] | [FILL IN: file, feature or commit] |
+
+Commit count alone does not represent contribution.
+
+## AI usage
+
+[FILL IN: List each AI tool used, what it assisted with and how the team verified its output. Write "No AI tools used" if none were used. This must match `evaluation-manifest.json`.]
+
+## Major design decisions
+
+- **Decision:** [FILL IN: decision and reason]
+- **Decision:** [FILL IN: decision and reason]
+
+## Known limitations
+
+- [FILL IN: known limitation or unfinished behaviour]
+
+## Repository records
+
+- [`EVENT.md`](EVENT.md) — event start code and pre-event-material declaration
+- [`evaluation-manifest.json`](evaluation-manifest.json) — structured judging evidence
+- [`LICENSES.md`](LICENSES.md) — frameworks, libraries, templates and assets
